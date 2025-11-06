@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="sw">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ASSA Bukoba Member Portal</title>
+  <meta name="description" content="Portal ya usajili wa wanachama ASSA Kanda ya Bukoba" />
+  <style>
+    :root{--blue:#0b66d0;--red:#d62828;--white:#ffffff;--muted:#6b7280;--card:#fff;}
+    *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
+    body{margin:0;background:linear-gradient(180deg,#fff,#f3f7ff);color:#07203a;padding:18px;}
+    .container{max-width:980px;margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--red),var(--blue));color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:800}
+    h1{margin:0;font-size:20px;color:var(--blue)}
+    .card{background:var(--card);border-radius:12px;padding:14px;margin-top:14px;box-shadow:0 6px 18px rgba(8,25,40,0.06)}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef8}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    button{background:linear-gradient(90deg,var(--blue),#2b9bff);color:#fff;padding:10px 12px;border-radius:10px;border:none;cursor:pointer}
+    .small{font-size:13px;color:var(--muted)}
+    .center{display:flex;align-items:center;gap:12px}
+    .qr-box{background:#fff;padding:8px;border-radius:8px;box-shadow:0 6px 18px rgba(8,25,40,0.04);display:inline-block}
+    .members{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+    .member{padding:10px;border-radius:10px;border:1px solid #eef6ff;background:linear-gradient(180deg,#fff,#fbfdff)}
+    .hidden{display:none}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+    .admin-login{display:flex;gap:8px;align-items:center}
+    .badge{font-size:12px;padding:6px 8px;background:linear-gradient(90deg,var(--red),var(--blue));color:white;border-radius:8px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">PCM</div>
+        <div>
+          <h1>ASSA Bukoba Member Portal</h1>
+          <div class="small">Kadi ya uanachama | Rangi: Nyekundu, Bluu, Nyeupe</div>
+        </div>
+      </div>
+      <div class="small">Project: <strong>yupro</strong></div>
+    </header>
+
+    <section class="card" id="loginCard">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h2 style="margin:0">Admin Login</h2>
+          <div class="small">Andika nenosiri la admin ili ufungue fomu</div>
+        </div>
+        <div class="admin-login">
+          <input id="adminPass" placeholder="Andika nenosiri" />
+          <button id="unlockBtn">Fungua</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="formCard" class="card hidden">
+      <h2 style="margin:0 0 8px 0">Tafadhali jaza taarifa za mwanaASSA</h2>
+      <div class="small" style="margin-bottom:10px">Fomu ya admin pekee (neno la siri: <strong>admin.assa</strong>)</div>
+
+      <form id="memberForm" autocomplete="off">
+        <div class="row">
+          <div>
+            <label>Jina kamili</label>
+            <input id="name" required placeholder="Jina kamili" />
+          </div>
+          <div>
+            <label>Namba ya simu</label>
+            <input id="phone" placeholder="07XXXXXXXX" />
+          </div>
+          <div>
+            <label>Cheo</label>
+            <input id="role" placeholder="Mfano: Mwenyekiti / Mwanachama" />
+          </div>
+          <div>
+            <label>Eneo</label>
+            <input id="location" placeholder="Mfano: Bukoba" />
+          </div>
+          <div>
+            <label>Shule</label>
+            <input id="school" placeholder="Shule anayofundisha / aliosoma" />
+          </div>
+          <div>
+            <label>Kanisa mahalia</label>
+            <input id="church" placeholder="Kanisa mahalia" />
+          </div>
+          <div>
+            <label>Anapoishi</label>
+            <input id="residence" placeholder="Mtaa / Kata / Wilaya" />
+          </div>
+          <div>
+            <label>Tarehe ya kuzaliwa</label>
+            <input id="birthdate" type="date" />
+          </div>
+          <div style="grid-column:1 / -1">
+            <label>Tabia ya mwanaASSA (mfupi)</label>
+            <textarea id="behavior" rows="2" placeholder="Mfano: Mnyenyekevu, Anashiriki, ..."></textarea>
+          </div>
+          <div style="grid-column:1 / -1">
+            <label>Hali ya ufaulu (academic performance)</label>
+            <input id="performance" placeholder="Mfano: A (Nzuri), B (Wastani), C (Mategemeo)" />
+          </div>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+          <button type="submit">Hifadhi & Tengeneza QR</button>
+          <div class="small" id="status">Hakuna kitendo kilichofanywa.</div>
+        </div>
+      </form>
+
+      <div id="result" style="margin-top:12px"></div>
+    </section>
+
+    <section id="previewCard" class="card hidden">
+      <h3 style="margin:0 0 8px 0">Kadi ya Mwanachama (Preview)</h3>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="flex:1">
+          <div style="font-weight:700" id="pvName">ASSA Bukoba member</div>
+          <div class="small" id="pvMeta">Cheo • Eneo • Shule</div>
+          <div class="small" id="pvResidence">Makazi: —</div>
+          <div class="small" id="pvBirth">Tarehe ya kuzaliwa: —</div>
+          <div class="small" id="pvBehavior">Tabia: —</div>
+          <div class="small" id="pvPerf">Ufaulu: —</div>
+        </div>
+        <div id="pvQr" class="qr-box"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3 style="margin:0 0 8px 0">Wanachama waliosajiliwa</h3>
+      <div id="membersList" class="members"></div>
+    </section>
+
+    <footer>
+      <div class="small">Maelezo: Tovuti hii inatumia Firebase Firestore (Project ID: <strong>yupro</strong>).</div>
+      <div class="small">Tafadhali hakikisha umeweka `firebaseConfig` (apiKey, authDomain, appId...) ili muunganisho ufanye kazi.</div>
+    </footer>
+  </div>
+
+  <script type="module">
+    // -- IMPORTANT: replace placeholders with your firebase config values from Firebase Console --
+    const firebaseConfig = {
+      apiKey: "REPLACE_WITH_YOUR_APIKEY",
+      authDomain: "REPLACE_WITH_YOUR_AUTHDOMAIN",
+      projectId: "yupro",
+      storageBucket: "REPLACE_WITH_YOUR_STORAGEBUCKET",
+      messagingSenderId: "REPLACE_WITH_YOUR_MESSAGINGSENDERID",
+      appId: "REPLACE_WITH_YOUR_APPID"
+    };
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import QRCode from 'https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js';
+
+    // init firebase
+    let app, db;
+    try{
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+    }catch(e){
+      console.warn('Firebase init error', e);
+    }
+
+    const $ = id => document.getElementById(id);
+    const ADMIN_PASS = 'admin.assa';
+    const MEMBERS_COL = 'members';
+
+    // admin unlock
+    $('unlockBtn').addEventListener('click', ()=>{
+      const val = $('adminPass').value.trim();
+      if(val === ADMIN_PASS){
+        $('loginCard').classList.add('hidden');
+        $('formCard').classList.remove('hidden');
+        $('previewCard').classList.remove('hidden');
+        $('status').textContent = 'Fomu iko wazi. Jaza taarifa na bonyeza Hifadhi.';
+      } else {
+        alert('Nenosiri si sahihi.');
+      }
+    });
+
+    // escape
+    function esc(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',\"'\":\"&#39;\"})[m]); }
+
+    // render members list
+    async function renderMembers(){
+      const list = $('membersList');
+      list.innerHTML = '<div class="small">Inapakia...</div>';
+      try{
+        const col = collection(db, MEMBERS_COL);
+        const snaps = await getDocs(col);
+        list.innerHTML = '';
+        snaps.forEach(snap=>{
+          const m = snap.data();
+          const id = snap.id;
+          const el = document.createElement('div');
+          el.className = 'member';
+          el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${esc(m.name)}</strong><div class="small">${esc(m.role)} • ${esc(m.location)}</div></div><div><a href="?uid=${id}">Angalia</a></div></div>
+            <div class="small">Shule: ${esc(m.school)} • Kanisa: ${esc(m.church)}</div>`;
+          // small QR
+          (async()=>{
+            try{
+              const url = window.location.origin + window.location.pathname + '?uid=' + id;
+              const c = document.createElement('canvas');
+              await QRCode.toCanvas(c, url, {scale:3});
+              el.appendChild(c);
+            }catch(e){}
+          })();
+          list.appendChild(el);
+        });
+      }catch(e){
+        list.innerHTML = '<div class="small">Haikuweza kupata wanachama — hakikisha firebaseConfig imewekwa.</div>';
+      }
+    }
+
+    // show profile if uid in url
+    async function showProfile(uid){
+      try{
+        const d = doc(db, MEMBERS_COL, uid);
+        const s = await getDoc(d);
+        if(!s.exists()){ alert('Profile haipo'); return; }
+        const m = s.data();
+        $('pvName').textContent = m.name || '—';
+        $('pvMeta').textContent = `${m.role||'—'} • ${m.location||'—'} • ${m.school||'—'}`;
+        $('pvResidence').textContent = 'Makazi: ' + (m.residence||'—');
+        $('pvBirth').textContent = 'Tarehe ya kuzaliwa: ' + (m.birthdate||'—');
+        $('pvBehavior').textContent = 'Tabia: ' + (m.behavior||'—');
+        $('pvPerf').textContent = 'Ufaulu: ' + (m.performance||'—');
+        $('pvQr').innerHTML = '';
+        const url = window.location.origin + window.location.pathname + '?uid=' + uid;
+        const c = document.createElement('canvas');
+        await QRCode.toCanvas(c, url, {scale:8,errorCorrectionLevel:'H'});
+        $('pvQr').appendChild(c);
+        window.location.hash = 'preview';
+      }catch(e){ console.warn(e); alert('Tatizo kuonyesha profile'); }
+    }
+
+    // form submit
+    $('memberForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const data = {
+        name: $('name').value.trim(),
+        phone: $('phone').value.trim(),
+        role: $('role').value.trim(),
+        location: $('location').value.trim(),
+        school: $('school').value.trim(),
+        church: $('church').value.trim(),
+        residence: $('residence').value.trim(),
+        birthdate: $('birthdate').value || '',
+        behavior: $('behavior').value.trim(),
+        performance: $('performance').value.trim(),
+        createdAt: serverTimestamp()
+      };
+      $('status').textContent = 'Inahifadhi...';
+      try{
+        const col = collection(db, MEMBERS_COL);
+        const ref = await addDoc(col, data);
+        const uid = ref.id;
+        $('status').textContent = 'Imehifadhi. QR ikitengenezwa...';
+        // QR
+        const profileUrl = window.location.origin + window.location.pathname + '?uid=' + uid;
+        const canvas = document.createElement('canvas');
+        await QRCode.toCanvas(canvas, profileUrl, {scale:8,errorCorrectionLevel:'H'});
+        $('result').innerHTML = '<div class="center"><strong>Imehifadhi:</strong>&nbsp;'+esc(data.name)+'</div>';
+        const wrap = document.createElement('div'); wrap.className='qr-box'; wrap.appendChild(canvas);
+        $('result').appendChild(wrap);
+        // show preview
+        $('pvName').textContent = data.name;
+        $('pvMeta').textContent = `${data.role} • ${data.location} • ${data.school}`;
+        $('pvResidence').textContent = 'Makazi: ' + data.residence;
+        $('pvBirth').textContent = 'Tarehe ya kuzaliwa: ' + (data.birthdate||'—');
+        $('pvBehavior').textContent = 'Tabia: ' + data.behavior;
+        $('pvPerf').textContent = 'Ufaulu: ' + data.performance;
+        $('pvQr').innerHTML = '';
+        const canvas2 = document.createElement('canvas');
+        await QRCode.toCanvas(canvas2, profileUrl, {scale:8,errorCorrectionLevel:'H'});
+        $('pvQr').appendChild(canvas2);
+        // refresh list
+        setTimeout(()=>renderMembers(),500);
+        $('status').textContent = 'Imekamilika.';
+        $('memberForm').reset();
+      }catch(err){
+        console.error(err);
+        $('status').textContent = 'Kuna tatizo: ' + (err.message || err);
+        alert('Haikuweza kuhifadhi. Hakikisha firebaseConfig imewekwa na Firestore imeanzishwa.');
+      }
+    });
+
+    // on load
+    window.addEventListener('load', async ()=>{
+      const params = new URLSearchParams(window.location.search);
+      const uid = params.get('uid');
+      if(uid && uid.length>3){
+        try{ await showProfile(uid); }catch(e){ console.warn(e); }
+      }
+      try{ await renderMembers(); }catch(e){ console.warn(e); }
+    });
+  </script>
+</body>
+</html>
