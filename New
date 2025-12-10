@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<title>ASSA PORTAL SYSTEM</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#e6f0ff; }
+/* Header */
+header { background:#1A73E8; color:white; padding:20px; text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.2); }
+nav a { color:white; margin:0 10px; text-decoration:none; font-weight:bold; transition:0.3s; }
+nav a:hover { text-decoration:underline; }
+/* Container */
+.container { width:90%; margin:auto; padding:20px; }
+/* Card style */
+.card { background:white; padding:20px; margin-bottom:20px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+/* Inputs & buttons */
+input, textarea { width:100%; padding:10px; margin-top:10px; border-radius:6px; border:1px solid #ccc; }
+button { padding:10px 20px; background:#1A73E8; color:white; border:none; margin-top:10px; cursor:pointer; border-radius:6px; transition:0.3s; }
+button:hover { background:#155ab6; }
+/* Sections */
+#adminPanel { display:none; }
+#loginBox { max-width:400px; margin:auto; margin-top:60px; }
+ul li { padding:5px; }
+img, video { max-width:200px; display:block; margin-top:10px; border-radius:6px; }
+/* Titles */
+h2, h3 { color:#1A73E8; }
+</style>
+</head>
+<body>
+
+<header>
+<h1>ASSA PORTAL SYSTEM</h1>
+<nav>
+    <a href="#" onclick="showPublic()">Home</a>
+    <a href="#" onclick="showLogin()">Admin Login</a>
+</nav>
+</header>
+
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginBox" class="card">
+<h2>Admin Login</h2>
+<input type="text" id="username" placeholder="Admin Name">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="loginError" style="color:red;"></p>
+</div>
+
+<!-- PUBLIC PAGE -->
+<div id="publicPage">
+<div class="card">
+<h2>Matangazo</h2>
+<div id="announcements"></div>
+</div>
+
+<div class="card">
+<h2>Taarifa za Maendeleo</h2>
+<div id="development"></div>
+</div>
+
+<div class="card">
+<h2>Orodha ya WanaASSA</h2>
+<ul id="membersList"></ul>
+</div>
+
+<div class="card">
+<h2>Media & Documents</h2>
+<div id="mediaFiles"></div>
+<div id="docsFiles"></div>
+</div>
+
+<div class="card">
+<h2>Mawasiliano</h2>
+<p>Email: info@assa.or.tz</p>
+<p>Simu: +255 7XX XXX XXX</p>
+</div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+
+<div class="card">
+<h2>Admin Dashboard</h2>
+<button onclick="logout()">Logout</button>
+</div>
+
+<div class="card">
+<h3>Post Tangazo</h3>
+<textarea id="newAnnouncement" placeholder="Andika tangazo..."></textarea>
+<button onclick="postAnnouncement()">POST</button>
+</div>
+
+<div class="card">
+<h3>Taarifa za Maendeleo</h3>
+<textarea id="newDevelopment" placeholder="Andika taarifa ya maendeleo..."></textarea>
+<button onclick="postDevelopment()">POST</button>
+</div>
+
+<div class="card">
+<h3>Ongeza Mwanachama</h3>
+<input type="text" id="newMember" placeholder="Jina la Mwanachama">
+<button onclick="addMember()">Ongeza</button>
+</div>
+
+<div class="card">
+<h3>Upload Picha au Video</h3>
+<input type="file" id="mediaInput" accept="image/*,video/*">
+<button onclick="addMedia()">Upload</button>
+</div>
+
+<div class="card">
+<h3>Upload Document</h3>
+<input type="file" id="docInput" accept=".pdf,.doc,.docx,.xls,.xlsx">
+<button onclick="addDoc()">Upload</button>
+</div>
+
+</div>
+</div>
+
+<script>
+// Storage
+let announcements=[], developmentReports=[], members=[], mediaFiles=[], docsFiles=[];
+
+// Admin login
+const ADMIN_USERNAME="Yusufu";
+const ADMIN_PASSWORD="20252026";
+
+function login(){
+    const user=document.getElementById("username").value.trim();
+    const pass=document.getElementById("password").value.trim();
+    if(user===ADMIN_USERNAME && pass===ADMIN_PASSWORD){
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("publicPage").style.display="none";
+        document.getElementById("adminPanel").style.display="block";
+        document.getElementById("loginError").innerText="";
+    } else {
+        document.getElementById("loginError").innerText="Username au password si sahihi!";
+    }
+}
+
+function logout(){
+    document.getElementById("adminPanel").style.display="none";
+    document.getElementById("publicPage").style.display="block";
+    document.getElementById("loginBox").style.display="block";
+}
+
+function showPublic(){ document.getElementById("publicPage").style.display="block"; document.getElementById("loginBox").style.display="none"; document.getElementById("adminPanel").style.display="none"; }
+function showLogin(){ document.getElementById("loginBox").style.display="block"; document.getElementById("publicPage").style.display="none"; document.getElementById("adminPanel").style.display="none"; }
+
+// Posts
+function postAnnouncement(){ const text=document.getElementById("newAnnouncement").value.trim(); if(text!==""){ announcements.push(text); renderAnnouncements(); document.getElementById("newAnnouncement").value=""; } }
+function renderAnnouncements(){ document.getElementById("announcements").innerHTML=announcements.map(a=>`<p>• ${a}</p>`).join(""); }
+
+function postDevelopment(){ const text=document.getElementById("newDevelopment").value.trim(); if(text!==""){ developmentReports.push(text); renderDevelopment(); document.getElementById("newDevelopment").value=""; } }
+function renderDevelopment(){ document.getElementById("development").innerHTML=developmentReports.map(a=>`<p>• ${a}</p>`).join(""); }
+
+function addMember(){ const name=document.getElementById("newMember").value.trim(); if(name!==""){ members.push(name); renderMembers(); document.getElementById("newMember").value=""; } }
+function renderMembers(){ document.getElementById("membersList").innerHTML=members.map(m=>`<li>${m}</li>`).join(""); }
+
+// Media & Docs
+function addMedia(){ const file=document.getElementById("mediaInput").files[0]; if(file){ mediaFiles.push(file); renderMedia(); document.getElementById("mediaInput").value=""; } }
+function renderMedia(){ const container=document.getElementById("mediaFiles"); container.innerHTML=""; mediaFiles.forEach(f=>{ if(f.type.startsWith("image/")){ const img=document.createElement("img"); img.src=URL.createObjectURL(f); container.appendChild(img); } else if(f.type.startsWith("video/")){ const vid=document.createElement("video"); vid.src=URL.createObjectURL(f); vid.controls=true; container.appendChild(vid); } }); }
+
+function addDoc(){ const file=document.getElementById("docInput").files[0]; if(file){ docsFiles.push(file); renderDocs(); document.getElementById("docInput").value=""; } }
+function renderDocs(){ const container=document.getElementById("docsFiles"); container.innerHTML=""; docsFiles.forEach(f=>{ const p=document.createElement("p"); p.innerText=f.name; container.appendChild(p); }); }
+
+showPublic();
+</script>
+
+</body>
+</html>
